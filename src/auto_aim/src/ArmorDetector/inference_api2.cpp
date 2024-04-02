@@ -7,10 +7,10 @@
  */
 #include "auto_aim/ArmorDetector/inference_api2.hpp"
 
-//static constexpr int INPUT_W = 640;    // Width of input
-//static constexpr int INPUT_H = 640;    // Height of input
-static constexpr int INPUT_W = 416;    // Width of input
-static constexpr int INPUT_H = 416;    // Height of input
+static constexpr int INPUT_W = 640;    // Width of input
+static constexpr int INPUT_H = 640;    // Height of input
+//static constexpr int INPUT_W = 416;    // Width of input
+//static constexpr int INPUT_H = 416;    // Height of input
 static constexpr int NUM_CLASSES = 8;  // Number of classes 98
 static constexpr int NUM_COLORS = 8;   // Number of color 48
 //static constexpr int NUM_CLASSES = 9;  // Number of classes 98

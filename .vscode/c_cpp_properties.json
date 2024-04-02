@@ -8,7 +8,9 @@
       "includePath": [
         "/opt/ros/noetic/include/**",
         "/usr/include/**",
-        "/home/rm/git_repository/awakelion_vision3/src/auto_aim/include/**"
+        "/home/rm/git_repository/awakelion_vision3/src/auto_aim/include/**",
+        "/home/rm/git_repository/awakelion_driver/src/robot_driver/include/**",
+        "/home/rm/git_repository/awakelion_driver/devel/**"
       ],
       "name": "ROS",
       "intelliSenseMode": "gcc-x64",

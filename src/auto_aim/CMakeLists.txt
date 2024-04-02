@@ -11,6 +11,7 @@ find_package(catkin REQUIRED COMPONENTS
   cv_bridge
   roscpp
   std_msgs
+  robot_driver
 )
 
 ## System dependencies are found with CMake's conventions
@@ -204,3 +205,93 @@ include
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+include_directories(
+  #OpenVINO推理引擎的头文件
+  /usr/include/ie/
+  /usr/include/ngraph/
+  /usr/include/openvino/
+
+  #eigen3
+  /usr/include/eigen3
+
+  #迈德威视sdk和openvino库所在路径
+  /lib/
+)
+
+# add_library(auto_aim_lib
+#   src/AngleSolver/PnpSolver.cpp
+#   include/auto_aim/AngleSolver/PnpSolver.h
+#   src/ArmorDetector/ArmorDetector.cpp
+#   include/auto_aim/ArmorDetector/ArmorDetector.h
+#   src/ArmorDetector/inference_api2.cpp
+#   include/auto_aim/ArmorDetector/inference_api2.hpp
+#   src/Camera/MVVideoCapture.cpp
+#   include/auto_aim/Camera/MVVideoCapture.h
+#   include/auto_aim/Camera/CameraApi.h
+#   src/Global_user/global_user.cpp
+#   include/auto_aim/Global_user/global_user.hpp
+#   src/Gui/Gui.cpp
+#   include/auto_aim/Gui/Gui.h
+#   src/kalman/armor_kalman.cpp
+#   include/auto_aim/kalman/armor_kalman.h
+#   src/predict/predict.cpp
+#   include/auto_aim/predict/predict.h
+#   src/RuneDetector/inference_api.cpp
+#   include/auto_aim/RuneDetector/inference_api.hpp
+#   src/Settings/Settings.cpp
+#   include/auto_aim/Settings/Settings.h
+# )
+
+set(SOURCES
+src/Settings/Settings.cpp
+src/AngleSolver/PnpSolver.cpp
+src/main.cpp
+src/Global_user/global_user.cpp
+src/Camera/MVVideoCapture.cpp
+src/Gui/Gui.cpp
+src/predict/predict.cpp
+src/ArmorDetector/ArmorDetector.cpp
+src/ArmorDetector/inference_api2.cpp
+src/kalman/armor_kalman.cpp
+src/RuneDetector/inference_api.cpp
+)
+set(HEADERS
+include/${PROJECT_NAME}/Settings/Settings.h
+include/${PROJECT_NAME}/AngleSolver/PnpSolver.h
+include/${PROJECT_NAME}/Gui/Gui.h
+include/${PROJECT_NAME}/ArmorDetector/ArmorDetector.h
+include/${PROJECT_NAME}/Camera/CameraApi.h
+include/${PROJECT_NAME}/Camera/MVVideoCapture.h
+include/${PROJECT_NAME}/ArmorDetector/inference_api2.hpp
+include/${PROJECT_NAME}/kalman/armor_kalman.h
+include/${PROJECT_NAME}/RuneDetector/inference_api.hpp
+include/auto_aim/predict/predict.h
+include/auto_aim/Global_user/global_user.hpp
+)
+
+add_executable(${PROJECT_NAME}_node ${SOURCES} ${HEADERS})
+target_link_libraries(${PROJECT_NAME}_node
+  ${catkin_LIBRARIES}
+  ${InferenceEngine_LIBRARIES}
+  # auto_aim_lib
+  libopenvino.so
+  libopenvino_c.so
+  libopenvino.so.2231
+  libopenvino_c.so.2231
+  libopenvino.so.2022.3.1
+  libopenvino_c.so.2022.3.1
+  libopenvino_onnx_frontend.so
+  libopenvino_paddle_frontend.so
+  # libopenvino_ir_frontend.so.2231
+  libopenvino_onnx_frontend.so.2231
+  libopenvino_tensorflow_frontend.so
+  # libopenvino_ir_frontend.so.2022.3.1
+  libopenvino_paddle_frontend.so.2231
+  libopenvino_onnx_frontend.so.2022.3.1
+  libopenvino_paddle_frontend.so.2022.3.1
+  libopenvino_tensorflow_frontend.so.2231
+  libopenvino_tensorflow_frontend.so.2022.3.1
+  -pthread
+  libMVSDK.so
+)

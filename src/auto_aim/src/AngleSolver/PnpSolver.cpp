@@ -355,7 +355,7 @@ void AngleSolver::coordinary_transformation(double moto_pitch, double moto_yaw, 
 {
 
     Eigen::Vector3d oc_tvec;
-    oc_tvec<<tvec(0,0),-tvec(1,0),tvec(2,0);
+    oc_tvec<<tvec(0,0),-tvec(1,0)-2.2,tvec(2,0);
 
     double a=moto_pitch/(180.0/M_PI);
     double b=moto_yaw/(180.0/M_PI);//此处符号是因为英雄坐标系与步兵不一样，到时候根据情况协商

@@ -1,8 +1,8 @@
 #ifndef PNPSOLVER_H
 #define PNPSOLVER_H
 //以下四个参数的大小与正负号与电机和相机的安装方向有关，尽量不要改公式里的符号，或者自己区分
-const double PCBD=11.25;  //
-const double PBMD=3.3; //13.7
+const double PCBD=5.07;  //
+const double PBMD=4.12; //13.7
 
 const double YCBD=0.1;//8
 const double YBMD=0.1;//8
