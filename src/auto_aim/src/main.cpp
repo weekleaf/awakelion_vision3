@@ -255,7 +255,7 @@ int main(int argc, char *argv[]){
     }
     else{
         MVVideoCapture::Play();
-        MVVideoCapture::SetExposureTime(true, (/*main_settings.debug.expore_time*/30000));//bu yao zi dong tiao bao guang!!!
+        MVVideoCapture::SetExposureTime(false, (/*main_settings.debug.expore_time*/30000));//bu yao zi dong tiao bao guang!!!
         MVVideoCapture::SetLargeResolution(true);
         std::cout << "MVVideoCapture Finished!" << std::endl;
     }
