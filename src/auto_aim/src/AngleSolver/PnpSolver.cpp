@@ -271,7 +271,7 @@ void AngleSolver::Camera2Moto(double moto_pitch, double moto_yaw , Eigen::Vector
      else {
          vz1 = +(g * (y * y) * sqrt(-1.0 / (g * g) * (g * z * 2.0 + sqrt(v * v * v * v - (g * g) * (y * y) - g * (v * v) * z * 2.0) * 2.0 - (v * v) * 2.0)) * 2.0 - g * (z * z) * sqrt(-1.0 / (g * g) * (g * z * 2.0 + sqrt(v * v * v * v - (g * g) * (y * y) - g * (v * v) * z * 2.0) * 2.0 - (v * v) * 2.0)) * 2.0 - (g * g) * z * pow(-1.0 / (g * g) * (g * z * 2.0 + sqrt(v * v * v * v - (g * g) * (y * y) - g * (v * v) * z * 2.0) * 2.0 - (v * v) * 2.0), 3.0 / 2.0) + (v * v) * z * sqrt(-1.0 / (g * g) * (g * z * 2.0 + sqrt(v * v * v * v - (g * g) * (y * y) - g * (v * v) * z * 2.0) * 2.0 - (v * v) * 2.0)) * 4.0) / ((y * y) * 4.0 + (z * z) * 4.0);
          vy1 = -((g * g) * y * pow(-1.0 / (g * g) * (g * z * 2.0 + sqrt(v * v * v * v - (g * g) * (y * y) - g * (v * v) * z * 2.0) * 2.0 - (v * v) * 2.0), 3.0 / 2.0) - (v * v) * y * sqrt(-1.0 / (g * g) * (g * z * 2.0 + sqrt(v * v * v * v - (g * g) * (y * y) - g * (v * v) * z * 2.0) * 2.0 - (v * v) * 2.0)) * 4.0 + g * y * z * sqrt(-1.0 / (g * g) * (g * z * 2.0 + sqrt(v * v * v * v - (g * g) * (y * y) - g * (v * v) * z * 2.0) * 2.0 - (v * v) * 2.0)) * 4.0) / ((y * y) * 4.0 + (z * z) * 4.0);
-         k = vy1 / vz1;
+         k = vz1 / vy1;
 
      }//未加空阻
 //     k=z/y;
@@ -314,7 +314,7 @@ void AngleSolver::Camera2Moto(double moto_pitch, double moto_yaw , Eigen::Vector
     moto_yaw/=(180.0/M_PI);//电控收发都是角度制，需要转成弧度制处理
 
     double _x2=tvec(0,0);
-    double _z2=abs(tvec(2,0))/tvec(2,0)*sqrt(pow(tvec(2,0),2)+pow(tvec(1,0),2));//?????
+    double _z2=/*abs(tvec(2,0))/tvec(2,0)*sqrt(pow(tvec(2,0),2)+pow(tvec(1,0),2))*/tvec(2,0);//?????
 
     //std::cout<<_x2<<" "<<_z2<<" "<<atan(_x2/_z2)<<std::endl;
 
@@ -354,41 +354,65 @@ void AngleSolver::Camera2Moto(double moto_pitch, double moto_yaw , Eigen::Vector
 void AngleSolver::coordinary_transformation(double moto_pitch, double moto_yaw, Eigen::Vector3d &tvec, Eigen::Vector3d rvec,Eigen::Vector3d &moto_tvec)
 {
 
+//     Eigen::Vector3d oc_tvec;
+//     oc_tvec<<tvec(0,0),-tvec(1,0)-2.2,tvec(2,0);
+
+//     double a=moto_pitch/(180.0/M_PI);
+//     double b=moto_yaw/(180.0/M_PI);//此处符号是因为英雄坐标系与步兵不一样，到时候根据情况协商
+//     double rotationAngle2 = a;
+//     Eigen::Vector3d rotationAxis2(0.0, 0.0, 1.0);  // 绕X轴旋转
+//     rotationAxis2.normalize();
+  
+//     double rotationAngle1 = b;
+//     Eigen::Vector3d rotationAxis1(0.0, 1.0, 0.0);  // 绕Y轴旋转
+//     rotationAxis1.normalize();
+  
+//     Eigen::AngleAxisd rotation1(rotationAngle1, rotationAxis1);
+//     Eigen::AngleAxisd rotation2(rotationAngle2, rotationAxis2);
+  
+//     Eigen::Matrix3d rotationMatrix1 = rotation1.toRotationMatrix();
+//     Eigen::Matrix3d rotationMatrix2 = rotation2.toRotationMatrix();
+
+
+//     double arfa=a+atan(PBMD/PCBD);
+//     double l=sqrt(pow(PCBD,2)+pow(PBMD,2));
+//     Eigen::Vector3d camera_tvec;
+// //    double xc=PCBD*cos(a)*sin(b);
+// //    double zc=PCBD*cos(a)*cos(b);
+// //    double yc=PCBD*sin(a);
+//     double xc=l*cos(arfa)*sin(b);
+//     double zc=l*cos(arfa)*cos(b);
+//     double yc=l*sin(arfa);
+//     camera_tvec<<xc,yc,zc;
+
+//     moto_tvec=camera_tvec + rotationMatrix2*rotationMatrix1*oc_tvec;
+//     //std::cout<<"moto_tvec"<<moto_tvec<<std::endl;
+
+//     //moto_tvec<<tvec(0,0),-tvec(1,0),tvec(2,0);
+
     Eigen::Vector3d oc_tvec;
-    oc_tvec<<tvec(0,0),-tvec(1,0)-2.2,tvec(2,0);
+    oc_tvec<<tvec(0,0)-10,-(tvec(1,0)-5.0),tvec(2,0);
 
     double a=moto_pitch/(180.0/M_PI);
     double b=moto_yaw/(180.0/M_PI);//此处符号是因为英雄坐标系与步兵不一样，到时候根据情况协商
-    double rotationAngle2 = a;
-    Eigen::Vector3d rotationAxis2(0.0, 0.0, 1.0);  // 绕X轴旋转
-    rotationAxis2.normalize();
-  
-    double rotationAngle1 = b;
-    Eigen::Vector3d rotationAxis1(0.0, 1.0, 0.0);  // 绕Y轴旋转
-    rotationAxis1.normalize();
-  
-    Eigen::AngleAxisd rotation1(rotationAngle1, rotationAxis1);
-    Eigen::AngleAxisd rotation2(rotationAngle2, rotationAxis2);
-  
-    Eigen::Matrix3d rotationMatrix1 = rotation1.toRotationMatrix();
-    Eigen::Matrix3d rotationMatrix2 = rotation2.toRotationMatrix();
-
 
     double arfa=a+atan(PBMD/PCBD);
     double l=sqrt(pow(PCBD,2)+pow(PBMD,2));
     Eigen::Vector3d camera_tvec;
-//    double xc=PCBD*cos(a)*sin(b);
-//    double zc=PCBD*cos(a)*cos(b);
-//    double yc=PCBD*sin(a);
     double xc=l*cos(arfa)*sin(b);
     double zc=l*cos(arfa)*cos(b);
     double yc=l*sin(arfa);
     camera_tvec<<xc,yc,zc;
 
-    moto_tvec=camera_tvec + rotationMatrix2*rotationMatrix1*oc_tvec;
-    //std::cout<<"moto_tvec"<<moto_tvec<<std::endl;
+    double dist=sqrt(pow(oc_tvec(0,0),2)+pow(oc_tvec(2,0),2));
 
-    //moto_tvec<<tvec(0,0),-tvec(1,0),tvec(2,0);
+    double x=camera_tvec(0,0)+cos(b)*oc_tvec(0,0)-sin(b)*oc_tvec(2,0);
+    double y=camera_tvec(1,0)+cos(a)*oc_tvec(1,0)+sin(a)*dist;
+    double z=camera_tvec(2,0)+cos(b)*oc_tvec(2,0)+sin(b)*oc_tvec(0,0);
+
+    moto_tvec<<x,y,z;
+
+
 
 
 }
