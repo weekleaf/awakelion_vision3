@@ -72,7 +72,7 @@ void detectThread(AimData *p_aim_data){
 
 
 
-    while(1){
+    while(ros::ok()){
         ros::spinOnce();
         MVVideoCapture::GetFrame((*p_aim_data).src);
         if(((*p_aim_data).src).empty()){
@@ -163,7 +163,7 @@ void detectThread(AimData *p_aim_data){
        std::stringstream time;
        time<<1.0/(*p_aim_data).running_time;
        cv::putText(src_clone, "fps: " + time.str(), cv::Point(50,50), cv::FONT_HERSHEY_COMPLEX, 0.9, cv::Scalar(0, 255, 0));
-       cv::resize(src_clone,src_clone,cv::Size(1280,960));
+       cv::resize(src_clone,src_clone,cv::Size(750,600));
        cv::imshow("best_armor",src_clone);
        //cv::waitKey(1);
 #endif
@@ -255,7 +255,7 @@ int main(int argc, char *argv[]){
     }
     else{
         MVVideoCapture::Play();
-        MVVideoCapture::SetExposureTime(false, (/*main_settings.debug.expore_time*/30000));//bu yao zi dong tiao bao guang!!!
+        MVVideoCapture::SetExposureTime(false, (/*main_settings.debug.expore_time*/10000));//bu yao zi dong tiao bao guang!!!
         MVVideoCapture::SetLargeResolution(true);
         std::cout << "MVVideoCapture Finished!" << std::endl;
     }
