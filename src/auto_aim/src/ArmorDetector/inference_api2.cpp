@@ -9,8 +9,8 @@
 
 static constexpr int INPUT_W = 640;    // Width of input
 static constexpr int INPUT_H = 640;    // Height of input
-//static constexpr int INPUT_W = 416;    // Width of input
-//static constexpr int INPUT_H = 416;    // Height of input
+// static constexpr int INPUT_W = 416;    // Width of input
+// static constexpr int INPUT_H = 416;    // Height of input
 static constexpr int NUM_CLASSES = 8;  // Number of classes 98
 static constexpr int NUM_COLORS = 8;   // Number of color 48
 //static constexpr int NUM_CLASSES = 9;  // Number of classes 98
@@ -341,7 +341,7 @@ namespace armor_detector
         std::cout << "Start initialize model..." << std::endl;
 
         // Setting Configuration Values
-        core.set_property("GPU", ov::enable_profiling(true));
+        core.set_property("CPU", ov::enable_profiling(true));
     
         //Step 1.Create openvino runtime core
         model = core.read_model(path);
@@ -362,7 +362,7 @@ namespace armor_detector
         //Step 2. Compile the model
         compiled_model = core.compile_model(
             model,
-            "AUTO",
+            "CPU",
             ov::hint::performance_mode(ov::hint::PerformanceMode::LATENCY)
             // "AUTO:GPU,CPU", 
             // ov::hint::performance_mode(ov::hint::PerformanceMode::LATENCY)

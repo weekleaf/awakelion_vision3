@@ -6,7 +6,7 @@
 
 #include "opencv2/opencv.hpp"
 
-#define DEBUG_MODE      // 是否开启debug
+// #define DEBUG_MODE      // 是否开启debug
 //#define SAVE_IMG
 #define USE_SERIAL      // 使用串口
 #define USE_VIDEO 0    // 0迈德威视 1摄像头/视频
@@ -32,7 +32,7 @@
 
 #define ARMS 1          // 当前PC所属机器人编号
 #if (ARMS == 1)
-//#define MODEL_PATH "/home/rm/nn_model/best_06_02.xml"
+// #define MODEL_PATH "/home/rm/git_repository/awakelion_vision3/src/auto_aim/best_06_02.onnx"
 #define MODEL_PATH "/home/rm/git_repository/awakelion_vision3/src/auto_aim/tdt5.onnx"
 #define MODEL_PATH_BUFF "/home/rm/nn_model/buff-05-28-01.xml"
 #define PARAM_OTHER_PATH "/home/rm/git_repository/awakelion_vision3/src/auto_aim/config_file/param_other.yml"  //全局配置文件路径

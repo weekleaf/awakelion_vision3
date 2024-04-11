@@ -208,24 +208,25 @@ void predictThread(AimData* p_aim_data){
                 pc_recv_mesg.aim_pitch=moto_move_pitch+0.0;
                 pc_recv_mesg.aim_yaw=moto_move_yaw;
                 pc_recv_mesg.visual_valid=1;
-                if(((moto_move_pitch - pc_send_mesg.robot_pitch) >= -10 && (moto_move_pitch - pc_send_mesg.robot_pitch) <= 10) && ((moto_move_yaw - pc_send_mesg.robot_yaw) >= -10 && (moto_move_yaw - pc_send_mesg.robot_yaw) <= 10))
-                    pc_recv_mesg.shoot_valid = 1;
-                else
-                    pc_recv_mesg.shoot_valid = 0;
+                // if(((moto_move_pitch - pc_send_mesg.robot_pitch) >= -10 && (moto_move_pitch - pc_send_mesg.robot_pitch) <= 10) && ((moto_move_yaw - pc_send_mesg.robot_yaw) >= -10 && (moto_move_yaw - pc_send_mesg.robot_yaw) <= 10))
+                //     pc_recv_mesg.shoot_valid = 1;
+                // else
+                //     pc_recv_mesg.shoot_valid = 0;
+                pc_recv_mesg.shoot_valid = 1;
                 std::cout<<moto_move_yaw-moto_yaw_angle<<std::endl;
                // std::cout<<"转动角"<<moto_move_pitch-moto_pitch_angle<<std::endl;
                 //std::cout<<"到达角"<<moto_move_pitch<<std::endl;
             }
-            else if(lost_flag<=50){
-                pc_recv_mesg.aim_pitch=last_pitch+0.0;
-                pc_recv_mesg.aim_yaw=last_yaw;
+            else if(lost_flag<=25){
+                pc_recv_mesg.aim_pitch=/*last_pitch+0.0*/0;
+                pc_recv_mesg.aim_yaw=/*last_yaw*/0;
                 pc_recv_mesg.visual_valid=1;
                 pc_recv_mesg.shoot_valid = 0;
                 lost_flag++;
             }
             else{
-                pc_recv_mesg.aim_pitch=moto_pitch_angle;
-                pc_recv_mesg.aim_yaw=moto_yaw_angle;
+                pc_recv_mesg.aim_pitch=0;
+                pc_recv_mesg.aim_yaw=0;
                 pc_recv_mesg.visual_valid=0;
                 pc_recv_mesg.shoot_valid = 0;
             }
@@ -255,7 +256,7 @@ int main(int argc, char *argv[]){
     }
     else{
         MVVideoCapture::Play();
-        MVVideoCapture::SetExposureTime(false, (/*main_settings.debug.expore_time*/10000));//bu yao zi dong tiao bao guang!!!
+        MVVideoCapture::SetExposureTime(false, (/*main_settings.debug.expore_time*/8000));//bu yao zi dong tiao bao guang!!!
         MVVideoCapture::SetLargeResolution(true);
         std::cout << "MVVideoCapture Finished!" << std::endl;
     }
