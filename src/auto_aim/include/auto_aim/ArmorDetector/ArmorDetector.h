@@ -27,7 +27,7 @@ using namespace armor_detector;
 class DetectorTool {
 public:
     DetectorTool();
-    DetectorTool(std::vector<ArmorObject> objects, bool &color_num);
+    DetectorTool(std::vector<ArmorObject> objects, bool &color_num, uint16_t &outpost_hp);
 
     bool bestArmor(ArmorObject *best_object);
     void setColor(int color_num);

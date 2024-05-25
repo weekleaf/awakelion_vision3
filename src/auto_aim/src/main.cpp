@@ -29,6 +29,7 @@ void visionCallback(const robot_driver::vision_rx_data::ConstPtr &msg){
     pc_send_mesg.task_mode = msg->task_mode;
     pc_send_mesg.time_stamp = msg->time_stamp;
     pc_send_mesg.visual_valid = msg->visual_valid;
+    pc_send_mesg.enemy_outpost_HP = msg->enemy_outpost_HP;
 }
 
 using namespace buff_detector;
@@ -116,10 +117,10 @@ void detectThread(AimData *p_aim_data){
         if(!std::isnan(pc_send_mesg.task_mode))
             (*p_aim_data).main_settings.main_mode = pc_send_mesg.task_mode;
 
-       if((*p_aim_data).main_settings.main_mode == 0){
+       if(/*(*p_aim_data).main_settings.main_mode == 0*/1){
 
          ad.detect(((*p_aim_data).src),objects);
-         detector_tool=DetectorTool(objects,color);
+         detector_tool=DetectorTool(objects,color,pc_send_mesg.enemy_outpost_HP);
          //best_object=&objects[0];
 
          for(int i=0;i<8;i++){
@@ -176,10 +177,12 @@ void detectThread(AimData *p_aim_data){
 
 void predictThread(AimData* p_aim_data){
     Eigen::Vector3d moto_tvec;
-    double moto_move_pitch;
-    double moto_move_yaw;
+    static double moto_move_pitch;
+    static double moto_move_yaw;
     static double last_pitch=0;
     static double last_yaw=0;
+    static double lost_pitch;
+    static double lost_yaw;
     static int lost_flag=0;
     static double during_time=2.0;
     double predict_time=during_time+(*p_aim_data).running_time;//s
@@ -187,7 +190,7 @@ void predictThread(AimData* p_aim_data){
     armor_predict_tool.kalmanInit();
 
     double time1=cv::getTickCount();
-        if((*p_aim_data).main_settings.main_mode == 0){
+        if(/*(*p_aim_data).main_settings.main_mode == 0*/1){
 
              double moto_pitch_angle=pc_send_mesg.robot_pitch;
              double moto_yaw_angle=pc_send_mesg.robot_yaw;
@@ -200,26 +203,36 @@ void predictThread(AimData* p_aim_data){
             armor_predict_tool.inputData((*p_aim_data).angle_solver,moto_pitch_angle,moto_yaw_angle,(*p_aim_data).cars_radio,&((*p_aim_data).armor_object),(*p_aim_data).cars_map,bullet_speed,predict_time);
 
             if(armor_predict_tool.predictArmor()){
-
                 lost_flag=0;
                 (*p_aim_data).angle_solver.Camera2Moto(moto_pitch_angle,moto_yaw_angle,armor_predict_tool.tvec_armor,armor_predict_tool.tvec11,moto_move_pitch,moto_move_yaw,bullet_speed,9.8);
                 last_pitch=moto_move_pitch;
                 last_yaw=moto_move_yaw;
-                pc_recv_mesg.aim_pitch=moto_move_pitch+0.0;
-                pc_recv_mesg.aim_yaw=moto_move_yaw;
-                pc_recv_mesg.visual_valid=1;
-                // if(((moto_move_pitch - pc_send_mesg.robot_pitch) >= -10 && (moto_move_pitch - pc_send_mesg.robot_pitch) <= 10) && ((moto_move_yaw - pc_send_mesg.robot_yaw) >= -10 && (moto_move_yaw - pc_send_mesg.robot_yaw) <= 10))
-                //     pc_recv_mesg.shoot_valid = 1;
-                // else
+                // if((*p_aim_data).armor_object.cls == 0 && pc_send_mesg.enemy_outpost_HP != 0){
+                //     pc_recv_mesg.visual_valid = 0;
                 //     pc_recv_mesg.shoot_valid = 0;
-                pc_recv_mesg.shoot_valid = 1;
-                std::cout<<moto_move_yaw-moto_yaw_angle<<std::endl;
-               // std::cout<<"转动角"<<moto_move_pitch-moto_pitch_angle<<std::endl;
-                //std::cout<<"到达角"<<moto_move_pitch<<std::endl;
+                // }
+                // else{
+                    pc_recv_mesg.aim_pitch=moto_move_pitch+0.0;
+                    pc_recv_mesg.aim_yaw=moto_move_yaw;
+                    pc_recv_mesg.visual_valid=1;
+                    // if(((moto_move_pitch - pc_send_mesg.robot_pitch) >= -10 && (moto_move_pitch - pc_send_mesg.robot_pitch) <= 10) && ((moto_move_yaw - pc_send_mesg.robot_yaw) >= -10 && (moto_move_yaw - pc_send_mesg.robot_yaw) <= 10))
+                    //     pc_recv_mesg.shoot_valid = 1;
+                    // else
+                    //     pc_recv_mesg.shoot_valid = 0;
+                    pc_recv_mesg.shoot_valid = 1;
+
+                    lost_pitch = moto_move_pitch;
+                    lost_yaw = moto_move_yaw;
+
+                    std::cout<<"pitch:"<<moto_move_pitch<<std::endl;
+                    std::cout<<"yaw:"<<moto_move_yaw<<std::endl;
+                // std::cout<<"转动角"<<moto_move_pitch-moto_pitch_angle<<std::endl;
+                    //std::cout<<"到达角"<<moto_move_pitch<<std::endl;
+                // }     
             }
             else if(lost_flag<=25){
-                pc_recv_mesg.aim_pitch=/*last_pitch+0.0*/0;
-                pc_recv_mesg.aim_yaw=/*last_yaw*/0;
+                pc_recv_mesg.aim_pitch=/*lost_pitch+0.0*/0;
+                pc_recv_mesg.aim_yaw=/*(lost_yaw*/0;
                 pc_recv_mesg.visual_valid=1;
                 pc_recv_mesg.shoot_valid = 0;
                 lost_flag++;
@@ -256,7 +269,7 @@ int main(int argc, char *argv[]){
     }
     else{
         MVVideoCapture::Play();
-        MVVideoCapture::SetExposureTime(false, (/*main_settings.debug.expore_time*/8000));//bu yao zi dong tiao bao guang!!!
+        MVVideoCapture::SetExposureTime(false, (/*main_settings.debug.expore_time*/12000));//bu yao zi dong tiao bao guang!!!
         MVVideoCapture::SetLargeResolution(true);
         std::cout << "MVVideoCapture Finished!" << std::endl;
     }

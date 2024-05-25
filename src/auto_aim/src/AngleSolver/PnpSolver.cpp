@@ -298,7 +298,7 @@ void AngleSolver::Camera2Moto(double moto_pitch, double moto_yaw , Eigen::Vector
 //        std::cout<<1<<std::endl;
 //    }
 
-    moto_move_pitch=atan(ctvec(1,0)/ctvec(2,0));
+    moto_move_pitch=atan(ctvec(1,0)/(ctvec(2,0)+14));
 //    moto_move_pitch=moto_to_pitch/*-abs(tvec(1,0))/tvec(1,0)*M_PI/2.0*/;//电控收角度制，发给他们前需要转成角度制
     moto_move_pitch*=(180.0/M_PI);
 
@@ -346,7 +346,7 @@ void AngleSolver::Camera2Moto(double moto_pitch, double moto_yaw , Eigen::Vector
 
 //    std::cout<<"moto_to_yaw!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"<<moto_to_yaw*(180.0/M_PI)<<std::endl;
 
-    moto_move_yaw=-atan(ctvec(0,0)/ctvec(2,0));
+    moto_move_yaw=-atan(ctvec(0,0)/(ctvec(2,0)+14));
 
     //moto_move_yaw=(moto_to_yaw);
     moto_move_yaw*=(180.0/M_PI);//已转成角度制//符号协商

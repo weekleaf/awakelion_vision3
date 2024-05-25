@@ -7,7 +7,6 @@
       },
       "includePath": [
         "/opt/ros/noetic/include/**",
-        "/home/rm/awakelion_vision3/src/auto_aim/include/**",
         "/usr/include/**",
         "/home/rm/awakelion_vision3/devel/include/**"
       ],

@@ -17,9 +17,9 @@ static constexpr int NUM_COLORS = 8;   // Number of color 48
 //static constexpr int NUM_COLORS = 4;   // Number of color 48
 static constexpr int TOPK = 128;       // TopK
 static constexpr float NMS_THRESH = 0.3;
-static constexpr float BBOX_CONF_THRESH = 0.75;
+static constexpr float BBOX_CONF_THRESH = 0.9;
 static constexpr float MERGE_CONF_ERROR = 0.15;
-static constexpr float MERGE_MIN_IOU = 0.9;
+static constexpr float MERGE_MIN_IOU = 0.75;
 
 namespace armor_detector
 {

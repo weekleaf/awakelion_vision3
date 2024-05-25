@@ -153,7 +153,7 @@ bool ArmorPredictTool::solveCarRadio()
 
         angle_solver.coordinary_transformation(moto_pitch,moto_yaw,tvec11,rvec11,moto_t_11);
         this->tvec1=moto_t_11;
-        std::cout<<car_angle/M_PI*180.0<<std::endl;//yes!
+        //std::cout<<car_angle/M_PI*180.0<<std::endl;//yes!
         this->running_time+=sqrt(pow(this->tvec1(2,0),2)+pow(this->tvec1(0,0),2))/100.0/bullet_speed;
         if(cars_radio[car_cls]==0)
             this->car_tvec=tvec1;
@@ -243,43 +243,45 @@ bool ArmorPredictTool::predictMove()
 
 
        if(x_store.size()>=4){
-        x_store.erase(x_store.begin());
-        y_store.erase(y_store.begin());
-        z_store.erase(z_store.begin());
+        // x_store.erase(x_store.begin());
+        // y_store.erase(y_store.begin());
+        // z_store.erase(z_store.begin());
 
 
 
-          Eigen::Vector2d _X;
-          Eigen::Vector2d _Y;
-          Eigen::Vector2d _Z;
-          Eigen::Vector2d _Xp;
-          Eigen::Vector2d _Yp;
-          Eigen::Vector2d _Zp;
+        //   Eigen::Vector2d _X;
+        //   Eigen::Vector2d _Y;
+        //   Eigen::Vector2d _Z;
+        //   Eigen::Vector2d _Xp;
+        //   Eigen::Vector2d _Yp;
+        //   Eigen::Vector2d _Zp;
 
-          if(this->running_time<=0) this->running_time=0.5;
+        //   if(this->running_time<=0) this->running_time=0.5;
 
-          double vx1=(x_store[2]-x_store[1])/running_time;
-          double vy1=(y_store[2]-y_store[1])/running_time;
-          double vz1=(z_store[2]-z_store[1])/running_time;
-          double vx2=(x_store[1]-x_store[0])/running_time;
-          double vy2=(y_store[1]-y_store[0])/running_time;
-          double vz2=(z_store[1]-z_store[0])/running_time;
-          double ax=(vx1-vx2)/running_time/2;
-          double ay=(vy1-vy2)/running_time/2;
-          double az=(vz1-vz2)/running_time/2;
-          _X << vx1,ax;
-          _Y << vy1,ay;
-          _Z << vz1,az;
+        //   double vx1=(x_store[2]-x_store[1])/running_time;
+        //   double vy1=(y_store[2]-y_store[1])/running_time;
+        //   double vz1=(z_store[2]-z_store[1])/running_time;
+        //   double vx2=(x_store[1]-x_store[0])/running_time;
+        //   double vy2=(y_store[1]-y_store[0])/running_time;
+        //   double vz2=(z_store[1]-z_store[0])/running_time;
+        //   double ax=(vx1-vx2)/running_time/2;
+        //   double ay=(vy1-vy2)/running_time/2;
+        //   double az=(vz1-vz2)/running_time/2;
+        //   _X << vx1,ax;
+        //   _Y << vy1,ay;
+        //   _Z << vz1,az;
 
-          _Xp=car_kalman_x.update(_X,this->running_time);
-          _Yp=car_kalman_y.update(_Y,this->running_time);
-          _Zp=car_kalman_z.update(_Z,this->running_time);
+        //   _Xp=car_kalman_x.update(_X,this->running_time);
+        //   _Yp=car_kalman_y.update(_Y,this->running_time);
+        //   _Zp=car_kalman_z.update(_Z,this->running_time);
 
-          double x=car_tvec(0,0) + _Xp(0,0) * running_time + 0.5 * _Xp(1,0) * running_time * running_time;
-          double y=car_tvec(1,0) + _Yp(0,0) * running_time + 0.5 * _Yp(1,0) * running_time * running_time;
-          double z=car_tvec(2,0) + _Zp(0,0) * running_time + 0.5 * _Zp(1,0) * running_time * running_time;
+        //   double x=car_tvec(0,0) + _Xp(0,0) * running_time + 0.5 * _Xp(1,0) * running_time * running_time;
+        //   double y=car_tvec(1,0) + _Yp(0,0) * running_time + 0.5 * _Yp(1,0) * running_time * running_time;
+        //   double z=car_tvec(2,0) + _Zp(0,0) * running_time + 0.5 * _Zp(1,0) * running_time * running_time;
            
-          car_predict << x,y,z;
+        //  car_predict << x,y,z;
+        car_predict=car_tvec;
+
            return true;
        }
        else return false;
@@ -333,15 +335,12 @@ bool ArmorPredictTool::predictArmor()
 
 
     if(solveCarRadio()){
-       if(predictRotated()){
 
            if(predictMove()){
                stateAdd();
                return true;
            }
            else return false;
-       }
-       else return false;
         //return true;
     }
     else return false;
